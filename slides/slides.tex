@@ -1,0 +1,224 @@
+% Created 2012-10-29 Mon 00:27
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{soul}
+\usepackage{textcomp}
+\usepackage{marvosym}
+\usepackage{wasysym}
+\usepackage{latexsym}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\tolerance=1000
+\newcommand{\Slang}{\texttt{S} }
+\newcommand{\R}{\texttt{R} }
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\mbox{\normalfont\textsf{#1}}}}
+\definecolor{Red}{rgb}{0.7,0,0}
+\definecolor{Blue}{rgb}{0,0,0.8}
+\usepackage{hyperref}
+\hypersetup{%
+pdfusetitle,
+bookmarks = {true},
+bookmarksnumbered = {true},
+bookmarksopen = {true},
+bookmarksopenlevel = 2,
+unicode = {true},
+breaklinks = {false},
+hyperindex = {true},
+colorlinks = {true},
+linktocpage = {true},
+plainpages = {false},
+linkcolor = {Blue},
+citecolor = {Blue},
+urlcolor = {Red},
+pdfstartview = {Fit},
+pdfpagemode = {UseOutlines},
+pdfview = {XYZ null null null}
+}
+\setbeamersize{text margin left=0.25cm}
+\setbeamersize{text margin right=0.25cm}
+\setbeamertemplate{navigation symbols}{}
+\providecommand{\alert}[1]{\textbf{#1}}
+
+\title{The CambR logo}
+\author{Laurent Gatto and Robert Stojnic}
+\date{\today}
+\hypersetup{
+  pdfkeywords={},
+  pdfsubject={},
+  pdfcreator={Emacs Org-mode version 7.8.11}}
+
+\begin{document}
+
+\maketitle
+
+
+
+
+
+
+
+
+
+\section{Introduction}
+\label{sec-1}
+\begin{frame}
+\frametitle{The logo}
+\label{sec-1-1}
+
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.7\linewidth]{./figs/CambR-logo.pdf}
+\caption{\label{fig:logo}The CambR logo}
+\end{figure}
+\end{frame}
+\begin{frame}
+\frametitle{Motivation}
+\label{sec-1-2}
+
+
+Material for our \emph{Advances \R programming course}. 
+
+A colourful slide that says 
+\begin{quote}
+This is what you are expected to know for this course.
+\end{quote}
+\end{frame}
+\section{Material and methods}
+\label{sec-2}
+\begin{frame}[fragile]
+\frametitle{Material}
+\label{sec-2-1}
+
+
+\begin{itemize}
+\item Get all the code from the \url{Bioconductor} project
+\end{itemize}
+\begin{verbatim}
+ svn co https://hedgehog.fhcrc.org/bioconductor/trunk/madman/Rpacks Rpacks-devel
+\end{verbatim}
+\begin{itemize}
+\item Extract only the \texttt{.R} and \texttt{.r} files
+\end{itemize}
+\begin{verbatim}
+ find -name "*.[rR]" | xargs cat > allR.R
+\end{verbatim}
+
+\begin{verbatim}
+ $ ls -sh allR.R 
+ 36M allR.R
+ $ wc allR.R 
+ 1008315  3351122 37166763 allR.R
+\end{verbatim}
+\end{frame}
+\begin{frame}[fragile]
+\frametitle{Methods - extracting relevant \emph{words}}
+\label{sec-2-2}
+
+
+
+\begin{verbatim}
+regexp <- "[a-zA-Z.][a-zA-Z0-9._]* *\\("
+gregexpr(regexp, c("foo", "c (i,j,k)",
+                   "setMethod()", "## comment"))
+gregexpr(regexp, "foo = c (i,j,k); bar = c(l, m)")
+\end{verbatim}
+
+
+\begin{verbatim}
+t <- readLines("allR.R")
+matches <- gregexpr(regexp, t)
+length(matches) ## 1008501
+k <- which(sapply(matches, function(x) x[[1]] != -1))
+length(k)  ## 502941
+\end{verbatim}
+\end{frame}
+\begin{frame}[fragile]
+\frametitle{Methods - counting words}
+\label{sec-2-3}
+
+
+Trim each word by remove leading/ending \texttt{\textbackslash{}t}, \texttt{\textbackslash{}n}, \texttt{\textbackslash{}f}, \texttt{\textbackslash{}r}, \texttt{\textbackslash{}s}
+\begin{verbatim}
+ sub("^[\t\n\f\r ]*", "", word)
+ sub("^[\t\n\f\r ]*$", "", word)
+\end{verbatim}
+
+Count/increment the word count if \texttt{is.function(word)}
+
+\begin{verbatim}
+if (is.function(word)) {           
+  if (!(word %in% names(words))) {
+    words[[word]] <- 1
+  } else {
+    words[[word]] <- words[[word]] + 1
+  }
+}
+\end{verbatim}
+
+(with some error catching not shown here.)
+\end{frame}
+\begin{frame}[fragile]
+\frametitle{The output}
+\label{sec-2-4}
+
+is a fun/freq \texttt{data.frame}
+
+\begin{verbatim}
+ > head(out)
+        fun  freq
+ 2        c 38336
+ 11  length 33491
+ 100  paste 22251
+ 17    list 15721
+ 25  return 15236
+ 26    stop 15041
+ ...
+\end{verbatim}
+
+that needs a bit of post-processing\ldots{}
+\end{frame}
+\begin{frame}
+\frametitle{Post-processing}
+\label{sec-2-5}
+
+
+\begin{itemize}
+\item Take the \texttt{sqrt(freq)}
+\item Get rid the embarrassing high-freq function \texttt{stop}.
+\item Add \texttt{CambR} with a \texttt{sqrt(freq)} of 300.
+\end{itemize}
+ 
+\end{frame}
+\begin{frame}[fragile]
+\frametitle{Plotting}
+\label{sec-2-6}
+
+
+\begin{verbatim}
+library(wordcloud)
+library(RColorBrewer)
+pal <- brewer.pal(9,"Blues")[5:9]
+wordcloud(out$fun, out$freq, c(6,.1), max.words = 200, 
+          random.order = FALSE, colors = pal)
+\end{verbatim}
+\end{frame}
+\section{Conclusion}
+\label{sec-3}
+
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=.7\linewidth]{./figs/CambR-logo.pdf}
+\caption{\label{fig:logo}\url{https://github.com/lgatto/CambRlogo}}
+\end{figure}
+
+\end{document}

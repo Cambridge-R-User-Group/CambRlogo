@@ -983,8 +983,6 @@ acosh	1
 cosh	1
 file_test	1
 vapply	1
-machine	1
-provide	1
 .saveRDS	1
 co.intervals	1
 upgrade	1
@@ -995,14 +993,12 @@ influence.measures	1
 conditionCall	1
 methodSignatureMatrix	1
 aggregate.data.frame	1
-codes	1
 showConnections	1
 diffinv	1
 .checkMFClasses	1
 boxplot.stats	1
 prompt	1
 formatDL	1
-package.description	1
 predict.lm	1
 rbeta	1
 browseEnv	1
@@ -1029,7 +1025,6 @@ deriv3	1
 linearizeMlist	1
 contr.helmert	1
 toLatex	1
-restart	1
 conflicts	1
 getAnywhere	1
 symnum	1

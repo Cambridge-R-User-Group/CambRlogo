@@ -4,27 +4,25 @@
 library(wordcloud)
 library(RColorBrewer)
 
-t = read.delim("functionCloud-sqrt.txt", as.is=T)
+t <- read.delim("functionCloud-sqrt.txt", as.is = TRUE)
 t$freq = round(t$freq)
 ## add CambR
-t = rbind(list("CambR", 300), t)
+t <- rbind(list("CambR", 300), t)
 ## decrease stop
 t[t$fun == "stop", "freq"] <- 60 ## was 123
 
 ## color scheme
-pal = brewer.pal(9,"Blues")
-pal = pal[-(1:4)]
+pal <- brewer.pal(9,"Blues")[5:9]
 
-
-pdf("CambR-logo.pdf")
+pdf("./figs/CambR-logo.pdf")
 wordcloud(t$fun, t$freq, c(6,.1), max.words = 200, random.order = FALSE, colors = pal)
 dev.off()
 
-jpeg("CambR-logo.jpg")
+jpeg("./figs/CambR-logo.jpg")
 wordcloud(t$fun, t$freq, c(6,.1), max.words = 200, random.order = FALSE, colors = pal)
 dev.off()
 
-svg("CambR-logo.svg")
+svg("./figs/CambR-logo.svg")
 wordcloud(t$fun, t$freq, c(6,.1), max.words = 200, random.order = FALSE, colors = pal)
 dev.off()
 
