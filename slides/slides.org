@@ -52,10 +52,9 @@
 
 ** The logo
 
-#+CAPTION:    The CambR logo
 #+LABEL:      fig:logo
 #+ATTR_LaTeX: width=.7\linewidth
-[[./figs/CambR-logo.pdf]]
+[[../figs/CambR-logo.pdf]]
 
 
 ** Motivation
@@ -78,8 +77,6 @@ This is what you are expected to know for this course.
 
 : $ ls -sh allR.R 
 : 36M allR.R
-: $ wc allR.R 
-: 1008315  3351122 37166763 allR.R
 
 
 ** Methods - extracting relevant /words/
@@ -95,11 +92,15 @@ This is what you are expected to know for this course.
   t <- readLines("allR.R")
   matches <- gregexpr(regexp, t)
   length(matches) ## 1008501
-  k <- which(sapply(matches, function(x) x[[1]] != -1))
+  k <- which(sapply(matches, function(x) x[1] != -1))
   length(k)  ## 502941
 #+end_src
 
 ** Methods - counting words
+
+Extract the matching pattern
+: word <- substr(t[i], start = m[j], 
+:                stop = m[j] + attr(m, "match.length")[j]-2)
 
 Trim each word by remove leading/ending =\t=, =\n=, =\f=, =\r=, =\s=
 : sub("^[\t\n\f\r ]*", "", word)
@@ -115,8 +116,6 @@ Count/increment the word count if =is.function(word)=
     }
   }
 #+end_src
-
-(with some error catching not shown here.)
 
 ** The output
 is a fun/freq =data.frame=
@@ -141,17 +140,19 @@ that needs a bit of post-processing...
  
 ** Plotting 
 #+begin_src r
-library(wordcloud)
-library(RColorBrewer)
+library("wordcloud")
+library("RColorBrewer")
 pal <- brewer.pal(9,"Blues")[5:9]
 wordcloud(out$fun, out$freq, c(6,.1), max.words = 200, 
           random.order = FALSE, colors = pal)
 #+end_src
 
+
 * Conclusion
 
-#+CAPTION:    \url{https://github.com/lgatto/CambRlogo}
+** https://github.com/lgatto/CambRlogo
+
 #+LABEL:      fig:logo
 #+ATTR_LaTeX: width=.7\linewidth
-[[./figs/CambR-logo.pdf]]
+[[../figs/CambR-logo.pdf]]
 

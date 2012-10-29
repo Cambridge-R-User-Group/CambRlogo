@@ -8,8 +8,9 @@ t <- readLines("allR.R")
 
 regexp <- "[a-zA-Z.][a-zA-Z0-9._]* *\\("
 matches <- gregexpr(regexp, t)
-k <- which(sapply(matches, function(x) x[[1]] != -1))
-  
+k <- which(sapply(matches, function(x) x[1] != -1))
+
+
 words <- list()
 for(i in k) {
   m <- matches[[i]]
